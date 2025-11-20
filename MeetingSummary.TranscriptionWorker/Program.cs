@@ -1,4 +1,5 @@
-﻿using MeetingSummary.Core.Interfaces;
+﻿using FluentValidation;
+using MeetingSummary.Core.Interfaces;
 using MeetingSummary.Services.Implementations;
 using MeetingSummary.TranscriptionWorker.BackgroundServices;
 using Microsoft.Azure.Cosmos;
@@ -33,11 +34,10 @@ builder.Services.AddSingleton<CosmosClient>(sp =>
     return new CosmosClient(cosmosConnectionString, options);
 });
 
-
-builder.Services.AddScoped<IServiceBusClientService, ServiceBusClientService>();
 builder.Services.AddScoped<IMeetingChunkProcessor, MeetingChunkProcessor>();
 builder.Services.AddScoped<ITranscriptRepository, CosmosDbTranscriptRepository>();
 builder.Services.AddScoped<ITranscriptionService, StubTranscriptionService>();
+builder.Services.AddValidatorsFromAssemblyContaining<MeetingChunkProcessor>();
 builder.Services.AddSingleton<TranscriptionWorkerService>();
 builder.Services.AddHostedService<TranscriptionWorkerService>();
 
