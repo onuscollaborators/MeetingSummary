@@ -26,30 +26,30 @@ namespace MeetingSummary.Services.Implementations
 
             _container = cosmosClient.GetContainer(databaseName, containerName);
         }
-        
+
         public async Task UpsertTranscriptSegment(TranscriptSegment segment, CancellationToken cancellationToken = default)
         {
             try
             {
-                segment.UpdatedAt = DateTime.UtcNow;
+                segment.UpdatedAt = DateTime.UtcNow.ToString("o");
 
-                var response = await _container.UpsertItemAsync(
-                    item: segment,
-                    partitionKey: new PartitionKey(segment.MeetingId),
-                    cancellationToken: cancellationToken
+                var response = await _container.UpsertItemAsync<TranscriptSegment>(
+                   segment,
+                    new PartitionKey(segment.MeetingId)
                 );
             }
             catch (CosmosException ex)
             {
-                _logger.LogError(ex, $"Error upserting transcript segment {segment.Id}");
+                _logger.LogError(ex, $"Error upserting transcript segment {segment.ChunkId}");
                 throw;
             }
         }
-        public async Task<TranscriptSegment?> GetTranscriptSegment(string meetingId, string chunkId, CancellationToken cancellationToken = default)
+
+        public async Task<TranscriptSegment?> GetTranscriptSegment(string meetingId, string id, CancellationToken cancellationToken = default)
         {
             try
             {
-                var id = $"{meetingId}_{chunkId}";
+
                 var response = await _container.ReadItemAsync<TranscriptSegment>(
                     id: id,
                     partitionKey: new PartitionKey(meetingId),
@@ -60,10 +60,11 @@ namespace MeetingSummary.Services.Implementations
             }
             catch (CosmosException ex)
             {
-                _logger.LogError(ex, "Error retrieving transcript segment {ChunkId} for meeting {MeetingId}", chunkId, meetingId);
+                _logger.LogError(ex, "Error retrieving transcript segment Id {Id}", id);
                 throw;
             }
         }
+
         public async Task<IEnumerable<TranscriptSegment>> GetMeetingTranscripts(string meetingId, CancellationToken cancellationToken = default)
         {
             try

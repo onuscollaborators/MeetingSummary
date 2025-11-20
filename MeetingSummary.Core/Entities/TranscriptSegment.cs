@@ -5,7 +5,7 @@ namespace MeetingSummary.Core.Entities
     public class TranscriptSegment
     {
         [JsonPropertyName("id")]
-        public string Id => $"{MeetingId}_{ChunkId}";
+        public required string Id { get; set; } = default!;
 
         [JsonPropertyName("meetingId")]
         public required string MeetingId { get; set; }
@@ -14,21 +14,21 @@ namespace MeetingSummary.Core.Entities
         public required string ChunkId { get; set; }
 
         [JsonPropertyName("transcriptText")]
-        public required string TranscriptText { get; set; }
+        public string TranscriptText { get; set; } = default!;
 
         [JsonPropertyName("language")]
-        public required string Language { get; set; }
+        public  string Language { get; set; } = default!;
 
         [JsonPropertyName("chunkStartOffsetSec")]
-        public required int ChunkStartOffsetSec { get; set; }
+        public  int ChunkStartOffsetSec { get; set; } = default!;
 
         [JsonPropertyName("chunkEndOffsetSec")]
-        public required int ChunkEndOffsetSec { get; set; }
+        public  int ChunkEndOffsetSec { get; set; } = default!;
 
         [JsonPropertyName("createdAt")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string CreatedAt { get; set; } = default!;
 
         [JsonPropertyName("updatedAt")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public string UpdatedAt { get; set; } = default!;
     }
 }

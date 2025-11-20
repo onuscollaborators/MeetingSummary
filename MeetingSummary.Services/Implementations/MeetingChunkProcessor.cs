@@ -25,21 +25,20 @@ namespace MeetingSummary.Services.Implementations
         {
             try
             {
-                var existingSegment = await _transcriptRepository
-                    .GetTranscriptSegment(message.MeetingId, message.ChunkId, cancellationToken);
-
+                var id = CreateId(message.MeetingId, message.ChunkId);
                 var transcriptText = await _transcriptionService.TranscribeAudio(message.BlobUrl, message.Language);
 
                 var segment = new TranscriptSegment
                 {
+                    Id = id,
                     MeetingId = message.MeetingId,
                     ChunkId = message.ChunkId,
                     TranscriptText = transcriptText,
                     Language = message.Language,
                     ChunkStartOffsetSec = message.ChunkStartOffsetSec,
                     ChunkEndOffsetSec = message.ChunkEndOffsetSec,
-                    CreatedAt = existingSegment?.CreatedAt ?? DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow.ToString("o"),
+                    UpdatedAt = DateTime.UtcNow.ToString("o")   
                 };
 
                 await _transcriptRepository.UpsertTranscriptSegment(segment, cancellationToken);
@@ -50,5 +49,7 @@ namespace MeetingSummary.Services.Implementations
                 throw;
             }
         }
+
+        private string CreateId(string meetingId, string chunkId) => $"{meetingId}-{chunkId}";
     }
 }

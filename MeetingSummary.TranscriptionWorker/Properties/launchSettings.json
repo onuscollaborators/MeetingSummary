@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MeetingSummary.TranscriptionWorker": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
