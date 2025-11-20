@@ -36,7 +36,7 @@ builder.Services.AddSingleton<CosmosClient>(sp =>
 
 builder.Services.AddScoped<IMeetingChunkProcessor, MeetingChunkProcessor>();
 builder.Services.AddScoped<ITranscriptRepository, CosmosDbTranscriptRepository>();
-builder.Services.AddScoped<ITranscriptionService, StubTranscriptionService>();
+builder.Services.AddScoped<ITranscriptionService, AzureWhisperTranscriptionService>();
 builder.Services.AddValidatorsFromAssemblyContaining<MeetingChunkProcessor>();
 builder.Services.AddSingleton<TranscriptionWorkerService>();
 builder.Services.AddHostedService<TranscriptionWorkerService>();
